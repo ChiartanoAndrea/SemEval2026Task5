@@ -120,8 +120,8 @@ The combination of the Flan-T5 Encoder, Structured Prompting, Weighted Loss, and
 
 | Metric | Performance | Analysis |
 | --- | --- | --- |
-| **Spearman Correlation** | **~0.75** | High correlation confirms the Contrastive Loss effectively taught the relative ordering of plausibility. |
-| **Accuracy within Std** | **~0.81** | Competitive accuracy achieved via Weighted SmoothL1 combined with inference-time boundary optimization. |
+| **Spearman Correlation** | **0.72412** | High correlation confirms the Contrastive Loss effectively taught the relative ordering of plausibility. |
+| **Accuracy within Std** | **0.84516** | Competitive accuracy achieved via Weighted SmoothL1 combined with inference-time boundary optimization. |
 
 ---
 
