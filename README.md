@@ -130,5 +130,12 @@ The combination of the Flan-T5 Encoder, Structured Prompting, Weighted Loss, and
 * **Base Model:** `google/flan-t5-xl`
 * **Libraries:** `transformers`, `peft`, `datasets`, `torch`, `scikit-learn`.
 * **Hardware:** Compatible with NVIDIA A100 (recommended) or T4 (with reduced batch size).
-* **Reference Paper:**
-*EncT5: A Framework for Fine-tuning T5 as Non-autoregressive Models* - Liu et al. (2021)
+## 8. Riferimenti Bibliografici
+
+* **Raffel, C., et al. (2020).** *Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer*. Journal of Machine Learning Research (JMLR).
+* **Chung, H. W., et al. (2022).** *Scaling Instruction-Finetuned Language Models*. arXiv preprint arXiv:2210.11416.
+* **Hu, E. J., et al. (2021).** *LoRA: Low-Rank Adaptation of Large Language Models*. International Conference on Learning Representations (ICLR).
+* **Liu, F., et al. (2022).** *EncT5: A Framework for Fine-tuning T5 as Non-autoregressive Models*. arXiv preprint arXiv:2110.08426.
+* **Khosla, P., et al. (2020).** *Supervised Contrastive Learning*. Advances in Neural Information Processing Systems (NeurIPS).
+* **Gao, T., Yao, X., & Chen, D. (2021).** *SimCSE: Simple Contrastive Learning of Sentence Embeddings*. Empirical Methods in Natural Language Processing (EMNLP).
+* **Uma, A. N., et al. (2021).** *Learning from Disagreement: A Survey*. Journal of Artificial Intelligence Research (JAIR).
