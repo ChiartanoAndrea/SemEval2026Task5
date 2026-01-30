@@ -130,3 +130,5 @@ The combination of the Flan-T5 Encoder, Structured Prompting, Weighted Loss, and
 * **Base Model:** `google/flan-t5-xl`
 * **Libraries:** `transformers`, `peft`, `datasets`, `torch`, `scikit-learn`.
 * **Hardware:** Compatible with NVIDIA A100 (recommended) or T4 (with reduced batch size).
+* **Reference Paper:**
+*EncT5: A Framework for Fine-tuning T5 as Non-autoregressive Models* - Liu et al. (2021)
