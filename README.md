@@ -139,3 +139,63 @@ The combination of the Flan-T5 Encoder, Structured Prompting, Weighted Loss, and
 * **Khosla, P., et al. (2020).** *Supervised Contrastive Learning*. Advances in Neural Information Processing Systems (NeurIPS).
 * **Gao, T., Yao, X., & Chen, D. (2021).** *SimCSE: Simple Contrastive Learning of Sentence Embeddings*. Empirical Methods in Natural Language Processing (EMNLP).
 * **Uma, A. N., et al. (2021).** *Learning from Disagreement: A Survey*. Journal of Artificial Intelligence Research (JAIR).
+
+# Usage & Reproduction
+
+To reproduce our results, follow the steps below. The code is optimized to run on a Linux environment with GPU acceleration. For training the **Flan-T5-XL Encoder** (3B parameters), we recommend a high-memory GPU (e.g., NVIDIA A100 40GB) to handle the batch size and gradients, although inference can be performed on smaller consumer GPUs (e.g., T4, A10).
+
+### 1. Installation
+
+Clone the repository and install the required dependencies:
+
+```bash
+git clone [https://github.com/ChiartanoAndrea/SemEval2026Task5]
+cd SemEval2026Task5
+pip install -r requirements.txt
+
+```
+
+Key dependencies include: transformers, peft, datasets, torch, scikit-learn, scipy, numpy, and tqdm.
+### 2. Data Preparatio
+Download the official dataset from the SemEval 2026 Task 5 competition page.Create a dataset/ directory in the root of the project.Place the JSON files inside dataset/ and rename them for consistency:train.json (Training set),dev.json (Development/Validation set),test.json (Test set).
+Your directory structure should look like this:
+
+```
+SemEval2026Task5/
+├── dataset/
+│   ├── train.json
+│   ├── dev.json
+│   └── test.json
+├── src/
+├── scripts/
+└── ...
+
+```
+### 3. Training
+To fine-tune the Flan-T5 XL Encoder using LoRA with our custom Uncertainty-Weighted Loss and Contrastive Loss, run the training script.The training configuration explicitly uses the Adafactor optimizer (for memory efficiency), a learning rate of 3e-4, and runs for 10 epochs with a batch size of 6
+```
+train.py \
+    --model_name "google/flan-t5-xl" \
+    --data_dir dataset/ \
+    --output_dir ./final_model \
+    --epochs 10 \
+    --batch_size 6 \
+    --lr 3e-4 \
+    --contrastive_weight 0.2 \
+    --uncertainty_scale 0.5 \
+    --lora_rank 32 \
+    --lora_alpha 64 \
+    --lora_dropout 0.2
+
+```
+
+### 4 Optimization:
+ Applies Strategic Clipping to the range [1.99, 4.01] to maximize the Accuracy within Standard Deviation metric.
+ ```
+ scripts/predict.py \
+    --base_model "google/flan-t5-xl" \
+    --adapter_path "./t5eval_contrastive" \
+    --test_file dataset/test.json \
+    --output_file predictions.jsonl
+```
+The final predictions will be saved in predictions.jsonl in the required submission format.
