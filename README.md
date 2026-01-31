@@ -140,62 +140,71 @@ The combination of the Flan-T5 Encoder, Structured Prompting, Weighted Loss, and
 * **Gao, T., Yao, X., & Chen, D. (2021).** *SimCSE: Simple Contrastive Learning of Sentence Embeddings*. Empirical Methods in Natural Language Processing (EMNLP).
 * **Uma, A. N., et al. (2021).** *Learning from Disagreement: A Survey*. Journal of Artificial Intelligence Research (JAIR).
 
-# Usage & Reproduction
+# Usage & Reproduction (Google Colab)
 
-To reproduce our results, follow the steps below. The code is optimized to run on a Linux environment with GPU acceleration. For training the **Flan-T5-XL Encoder** (3B parameters), we recommend a high-memory GPU (e.g., NVIDIA A100 40GB) to handle the batch size and gradients, although inference can be performed on smaller consumer GPUs (e.g., T4, A10).
+To reproduce our results, we provide Jupyter Notebooks optimized for Google Colab. The training process requires a high-memory GPU (A100 recommended, available via Colab Pro), while inference can be run on standard GPUs (T4).
 
-### 1. Installation
+### 1. Drive Setup & Data Preparation
 
-Clone the repository and install the required dependencies:
+1.  **Create a Project Folder:**
+    Create a folder in your Google Drive (e.g., `My Drive/LLM_Project/`).
+2.  **Upload Datasets:**
+    Upload the official JSON datasets (`train.json`, `dev.json`, `test.json`) into this folder.
+3.  **Upload Notebooks:**
+    Upload the two provided notebooks (`.ipynb`) into your Drive or open them directly via GitHub/Colab.
 
-```bash
-git clone [https://github.com/ChiartanoAndrea/SemEval2026Task5]
-cd SemEval2026Task5
-pip install -r requirements.txt
-
+*Expected Drive Structure:*
+```
+/content/drive/MyDrive/LLM_Project/
+├── train.json
+├── dev.json
+├── test.json
+├── taskflant5_ContrastiveLoss_stdev_prompt.ipynb 
+└── estrattore_prediction.ipynb                   
 ```
 
-Key dependencies include: transformers, peft, datasets, torch, scikit-learn, scipy, numpy, and tqdm.
-### 2. Data Preparatio
-Download the official dataset from the SemEval 2026 Task 5 competition page.Create a dataset/ directory in the root of the project.Place the JSON files inside dataset/ and rename them for consistency:train.json (Training set),dev.json (Development/Validation set),test.json (Test set).
-Your directory structure should look like this:
-
+### 2. Training
+To fine-tune the Flan-T5-XL Encoder, open the training notebook in Google Colab.
 ```
-SemEval2026Task5/
-├── dataset/
-│   ├── train.json
-│   ├── dev.json
-│   └── test.json
-├── src/
-├── scripts/
-└── ...
-
+Notebook: taskflant5_ContrastiveLoss_stdev_prompt.ipynb
 ```
-### 3. Training
-To fine-tune the Flan-T5 XL Encoder using LoRA with our custom Uncertainty-Weighted Loss and Contrastive Loss, run the training script.The training configuration explicitly uses the Adafactor optimizer (for memory efficiency), a learning rate of 3e-4, and runs for 10 epochs with a batch size of 6
-```
-train.py \
-    --model_name "google/flan-t5-xl" \
-    --data_dir dataset/ \
-    --output_dir ./final_model \
-    --epochs 10 \
-    --batch_size 6 \
-    --lr 3e-4 \
-    --contrastive_weight 0.2 \
-    --uncertainty_scale 0.5 \
-    --lora_rank 32 \
-    --lora_alpha 64 \
-    --lora_dropout 0.2
+Hardware: Set Runtime Type to GPU (A100).
 
+Steps:
+
+Mount Drive: Run the first cell to mount Google Drive.
+
+Install Dependencies: The notebook includes cells to install transformers, peft, datasets, and adafactor.
+
+Config: Verify the train_path and dev_path variables point to your Drive folder.
+
+Run: Execute all cells. The script uses Adafactor (LR 3e-4, Batch 6) and our custom Uncertainty-Weighted Loss.
+
+Output: The trained adapter will be saved and zipped as t5eval_stdev6.zip in your Drive folder.
+
+### 3. Inference & Evaluation
+To generate predictions on the test set, use the inference notebook.
+```
+Notebook: estrattore_prediction.ipynb
 ```
 
-### 4 Optimization:
- Applies Strategic Clipping to the range [1.99, 4.01] to maximize the Accuracy within Standard Deviation metric.
- ```
- scripts/predict.py \
-    --base_model "google/flan-t5-xl" \
-    --adapter_path "./t5eval_contrastive" \
-    --test_file dataset/test.json \
-    --output_file predictions.jsonl
-```
-The final predictions will be saved in predictions.jsonl in the required submission format.
+Hardware: Set Runtime Type to GPU (T4 or better).
+
+Steps:
+
+-Load Model: The notebook automatically unzips the trained adapter (t5eval_stdev6.zip) from your Drive.
+
+-Inference: Run the prediction cells. The model uses the T5Encoder architecture with the saved regression head.
+
+-Optimization: The script automatically applies Strategic Clipping to the range [1.99, 4.01] to maximize the evaluation metric.
+
+-Submission: The final output is saved as predictions.jsonl and zipped as submit_dev.zip ready for download.
+
+### Key hyperparameters (Reproducibility)
+Model: google/flan-t5-xl (Encoder-Only)
+
+LoRA Config: r=32, alpha=64, dropout=0.2, target modules ["q", "v", "k", "o"].
+
+Loss: Weighted SmoothL1 + Contrastive Loss (weight 0.2).
+
+
