@@ -166,7 +166,7 @@ To reproduce our results, we provide Jupyter Notebooks optimized for Google Cola
 ### 2. Training
 To fine-tune the Flan-T5-XL Encoder, open the training notebook in Google Colab.
 ```
-Notebook: taskflant5_ContrastiveLoss_stdev_prompt.ipynb
+Notebook: src/taskflant5_ContrastiveLoss_stdev_prompt.ipynb
 ```
 Hardware: Set Runtime Type to GPU (A100).
 
@@ -180,12 +180,12 @@ Config: Verify the train_path and dev_path variables point to your Drive folder.
 
 Run: Execute all cells. The script uses Adafactor (LR 3e-4, Batch 6) and our custom Uncertainty-Weighted Loss.
 
-Output: The trained adapter will be saved and zipped as t5eval_stdev6.zip in your Drive folder.
+Output: The trained adapter will be saved and zipped as t5eval.zip in your Drive folder.
 
 ### 3. Inference & Evaluation
 To generate predictions on the test set, use the inference notebook.
 ```
-Notebook: estrattore_prediction.ipynb
+Notebook: src/estrattore_prediction.ipynb
 ```
 
 Hardware: Set Runtime Type to GPU (T4 or better).
